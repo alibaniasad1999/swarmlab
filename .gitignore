@@ -1,6 +1,6 @@
 # Windows default autosave extension
 *.asv
-
+*.avi
 # General files for macOS
 *.DS_Store
 .AppleDouble
