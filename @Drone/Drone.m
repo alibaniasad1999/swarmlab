@@ -125,6 +125,7 @@ classdef Drone < handle
         vel_xyz     % vx, vy, vz
         attitude    % phi, theta, psi
         rates       % p, q, r
+        sensor_data % imu and rate gyro
         
         % State history
         pos_ned_history
@@ -274,6 +275,21 @@ classdef Drone < handle
             Drone.path = zeros(26, 1);
             Drone.alpha = 0;
 
+        end
+
+        %%%%%%%%%%% my sensor data 
+        function get_sensor_data(self)
+            % UPDATE_SENSOR_MEASUREMENTS: Update the sensor measurements
+            % based on the sensor parameters.
+            
+            imu_data = sensors(self.get_state(), self.forces, self.airdata, ...
+                self.p_drone, self.p_physics);
+%        y_gyro_x;  y_gyro_y;  y_gyro_z;
+%        y_accel_x; y_accel_y; y_accel_z;
+%        y_static_pres; y_diff_pres
+            gps_data = gps(self.get_state(), self.p_sim.dt, self.p_drone);
+           
+            self.sensor_data = [imu_data; gps_data];
         end
 
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

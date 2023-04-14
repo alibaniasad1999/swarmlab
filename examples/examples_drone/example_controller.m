@@ -42,26 +42,26 @@ if exist('app', 'var')
     DEBUG = app.debug_plot;
 end
 
-%% Initialize drone, video writer and drone viewer
-
-% Init drone
-drone = Drone(DRONE_TYPE, p_drone, p_battery, p_sim, p_physics, map);
-drone.set_pos([rand() * map.width; rand() * map.width; -rand() * map.max_height]);
-
-% Init video writer
-if VIDEO
-    results_folder = 'results/results_drone/';
-    if ~exist(results_folder, 'dir')
-       mkdir(results_folder);
-    end
-    date_string = datestr(now,'yyyy_mm_dd_HH_MM_SS');
-    video_filename = strcat(mfilename, '_', date_string);
-    video_filepath = strcat(results_folder, video_filename);
-    video = VideoWriterWithRate(video_filepath, p_sim.dt_video);
-end
-
-% Init drone viewer
-drone_viewer = DroneViewer(drone, p_sim.dt_plot, CENTER_VIEW_ON_DRONE);
+% %% Initialize drone, video writer and drone viewer
+% 
+% % Init drone
+% drone = Drone(DRONE_TYPE, p_drone, p_battery, p_sim, p_physics, map);
+% drone.set_pos([rand() * map.width; rand() * map.width; -rand() * map.max_height]);
+% 
+% % Init video writer
+% if VIDEO
+%     results_folder = 'results/results_drone/';
+%     if ~exist(results_folder, 'dir')
+%        mkdir(results_folder);
+%     end
+%     date_string = datestr(now,'yyyy_mm_dd_HH_MM_SS');
+%     video_filename = strcat(mfilename, '_', date_string);
+%     video_filepath = strcat(results_folder, video_filename);
+%     video = VideoWriterWithRate(video_filepath, p_sim.dt_video);
+% end
+% 
+% % Init drone viewer
+% drone_viewer = DroneViewer(drone, p_sim.dt_plot, CENTER_VIEW_ON_DRONE);
 
 %% Main simulation loop
 
@@ -98,6 +98,7 @@ for time = p_sim.start_time:p_sim.dt:p_sim.end_time
     
     % Update drone states and plot
     drone.update_state(wind, time);
+    drone.get_sensor_data()
     
     % Update drone viewer
     drone_viewer.update(time, drone, []);
@@ -117,5 +118,4 @@ end
 if VIDEO
     video.close();
 end
-
 disp('Simulation completed successfully');

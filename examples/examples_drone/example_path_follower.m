@@ -73,7 +73,8 @@ end
 drone_viewer = DroneViewer(drone, p_sim.dt_plot, CENTER_VIEW_ON_DRONE);
 
 %% Main simulation loop
-
+data = zeros(13, length(p_sim.start_time:p_sim.dt:p_sim.end_time));
+counter = 1;
 disp('Type CTRL-C to exit');
 for time = p_sim.start_time:p_sim.dt:p_sim.end_time
     
@@ -110,6 +111,13 @@ for time = p_sim.start_time:p_sim.dt:p_sim.end_time
     
     % Path follower
     drone.follow_path();
+    drone.get_sensor_data()
+%        y_gyro_x;  y_gyro_y;  y_gyro_z;
+%        y_accel_x; y_accel_y; y_accel_z;
+%        y_static_pres; y_diff_pres
+%      y_gps_pn; y_gps_pe; y_gps_ph; y_gps_Vg; y_gps_course
+    data(:, counter) = drone.sensor_data(); % 13*n
+    counter = counter + 1;
     
     % Plot drone
     drone_viewer.update(time, drone, map);
